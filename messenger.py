@@ -15,13 +15,22 @@ class Messenger(Thread):
                 msg, addr = self.crQueue.get(False);
                 peer = findPeer(addr);
                 print(peer.username + ": " + msg);
+			
+			except Queue.Empty:
+				# do nothing
+			
             except Exception as error:
                 print(repr(error));
 
             try:
+				msg = self.csQueue.get(False);
                 for i in range(0, len(peerList)):
-                    msg = csQueue(
-                
+					addr = peerList[i].addr;
+					port = peerList[i].port;
+					self.socket.sendto(msg.encode(), (addr, port));
+					
+            except Queue.Empty:
+				# do nothing
                 
     def findPeer(addr):
         for i in range(0, len(peerList)):

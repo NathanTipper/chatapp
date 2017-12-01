@@ -3,10 +3,10 @@ from threading import Thread
 import socket;
 
 class MasterReceiver(Thread):
-    def __init__(self, socket, hQueue, cQueue):
+    def __init__(self, socket, hQueue, crQueue):
         self.socket = socket;
         self.hQueue = hQueue;
-        self.cQueue = cQueue;
+        self.crQueue = cQueue;
         self.bufferLength = 1024;
         
     def run():
