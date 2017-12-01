@@ -1,44 +1,41 @@
 from queue import Queue, Empty;
 from threading import Thread;
 import socket;
+import time;
 
 class Messenger(Thread):
     def __init__(self, socket, peerList, crQueue, csQueue):
+        Thread.__init__(self);
         self.socket = socket;
         self.peerList = peerList;
         self.crQueue = crQueue;
         self.csQueue = csQueue;
 
-    def run():
+    def run(self):
         while True:
             try:
                 msg, addr = self.crQueue.get(False);
-                peer = findPeer(addr);
-                print(peer.username + ": " + msg);
-			
-			except Queue.Empty:
-				# do nothing
-			
-            except Exception as error:
-                print(repr(error));
+                try:
+                    peer = self.findPeer(addr);
+                    print(peer.username + ": " + msg);
+                except Exception as error:
+                    print(str(error));
+                    
+                    msg = self.csQueue.get(False);
+                    for i in range(0, len(self.peerList)):
+                        addr = self.peerList[i].addr;
+                        port = self.peerList[i].port;
+                        self.socket.sendto(msg.encode(), (addr, port));
+            except Empty:
+                dummy = 1+1;
 
-            try:
-				msg = self.csQueue.get(False);
-                for i in range(0, len(peerList)):
-					addr = peerList[i].addr;
-					port = peerList[i].port;
-					self.socket.sendto(msg.encode(), (addr, port));
-					
-            except Queue.Empty:
-				# do nothing
-                
-    def findPeer(addr):
-        for i in range(0, len(peerList)):
-            if addr[0] != peerList[i].addr:
+    def findPeer(self,addr):
+        for i in range(0, len(self.peerList)):
+            if addr[0] != self.peerList[i].addr:
                 continue;
-            elif addr[1] != peerList[i].port:
+            elif addr[1] != self.peerList[i].port:
                 continue;
 
-            return peerList[i];
+            return self.peerList[i];
 
         raise Exception("Could not find peer in list!");

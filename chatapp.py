@@ -11,54 +11,64 @@ from messenger import Messenger;
 from broadcaster import Broadcaster;
 from queue import Queue, Empty;
 
-
-IP_ADDRESS = "142.66.140";
 PORT_MIN = 50000;
 PORT_MAX = 50008;
 
 def main():
-	if len(sys.argv) != 2:
-		print("Usage: {} [username]".format(sys.argv[0]));
-		sys.exit(1);
+        if len(sys.argv) != 2:
+                print("Usage: {} [username]".format(sys.argv[0]));
+                sys.exit(1);
 
-    port = random.randint(PORT_MIN, PORT_MAX);
-    try:
-        socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM);
-    except:
-        print('Could not create socket');
-        exit(1);
+        try:
+                s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM);
+        except:
+                print('Could not create socket');
+                exit(1);
+        
+        port = PORT_MIN;
+        while True:
+                try:
+                        s.bind(('', port));
+                        break;
+                except:
+                        print('Could not bind socket');
+                        port += 1;
+                        if(port > PORT_MAX):
+                                exit(1);
 
-	try:
-		socket.bind(('', port)); 
-	except:
-        print('Could not bind socket');
-        exit(1);
 
-	
-    hQueue = Queue();
-    crQueue = Queue();
-	csQueue = Queue();
-    peerList = [];
-	bc = Broadcaster(socket, peerList, sys.argv[1]);
-	mr = MasterReceiver(socket, hQueue, crQueue);
-    pd = PeerDiscover(socket, peerList, queue);
-	mgr = Messenger(socket, peerList, crQueue, csQueue);
+        hQueue = Queue();
+        crQueue = Queue();
+        csQueue = Queue();
+        peerList = [];
+        bc = Broadcaster(s, peerList, sys.argv[1]);
+        mr = MasterReceiver(s, hQueue, crQueue);
+        pd = PeerDiscover(peerList, hQueue);
+        mgr = Messenger(s, peerList, crQueue, csQueue);
+
+        bc.daemon = True;
+        mr.daemon = True;
+        pd.daemon = True;
+        mgr.daemon = True;
     
-    pd.start();
-	mr.start();
-	pd.start();
-	mgr.start();
+        bc.start();
+        mr.start();
+        pd.start();
+        mgr.start();
 	
-	print("Loading peers...");
-	time.sleep(5.0);
+        #print("Loading peers...");
 	
-	msg = "";
-	while True:
-		if len(msg) == 1 && msg[0] == 'q':
-			break;
-		
-		msg = input(sys.argv[1] + ": ");
-		csqueue.put(msg);
+        msg = "";
+        while True:
+                msg = input(sys.argv[1] + ": ");
+                if len(msg) == 1 and msg[0] == 'q':
+                        break;
+                if(msg == "list"):
+                        print(" Users online: ");
+                        for i in range(0, len(peerList)):
+                                print(peerList.username);
+                csQueue.put(msg);
 	
+        print("Logged off");
 	
 main();
