@@ -11,11 +11,9 @@ class MasterReceiver(Thread):
         self.bufferLength = 1024;
         
     def run(self):
-        print("Running MasterReceiver");
         while True:
             data, addr = self.socket.recvfrom(self.bufferLength);
             msg = data.decode();
-            print("Received message: " + msg);
             if self.isHelloMsg(msg):
                 msg = msg[5:];
                 self.hQueue.put((msg, addr));
@@ -24,7 +22,7 @@ class MasterReceiver(Thread):
 
     def isHelloMsg(self, msg):
         index = msg.find("HELLO");
-        if(index == 1):
+        if(index == 0):
             return True;
 
         return False;

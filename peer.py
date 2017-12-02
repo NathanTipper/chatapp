@@ -6,10 +6,12 @@ class Peer:
         self.addr = addr;
         self.port = port;
     
-    def areEqual(peer):
+    def areEqual(self,peer):
         if self.username != peer.username:
             return False;
         if self.addr != peer.addr:
             return False;
         if self.port != peer.port:
             return False;
+            
+        return True;

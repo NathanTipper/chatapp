@@ -66,7 +66,8 @@ def main():
                 if(msg == "list"):
                         print(" Users online: ");
                         for i in range(0, len(peerList)):
-                                print(peerList.username);
+                                print(peerList[i].username);
+
                 csQueue.put(msg);
 	
         print("Logged off");

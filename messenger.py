@@ -21,11 +21,16 @@ class Messenger(Thread):
                 except Exception as error:
                     print(str(error));
                     
-                    msg = self.csQueue.get(False);
-                    for i in range(0, len(self.peerList)):
-                        addr = self.peerList[i].addr;
-                        port = self.peerList[i].port;
-                        self.socket.sendto(msg.encode(), (addr, port));
+
+            except Empty:
+                dummy = 1+1;
+            
+            try:
+                msg = self.csQueue.get(False);
+                for i in range(0, len(self.peerList)):
+                    addr = self.peerList[i].addr;
+                    port = self.peerList[i].port;
+                    self.socket.sendto(msg.encode(), (addr, port));
             except Empty:
                 dummy = 1+1;
 

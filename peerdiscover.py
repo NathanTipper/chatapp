@@ -15,35 +15,35 @@ class PeerDiscover(Thread):
         while True:
             try:
                 msg, addr = self.hQueue.get(False);
-                newPeer = peer(msg, addr[0], addr[1]); # Create a new peer based on the username, which is given by the text before a semicolon, and the address.
-                exists = existInList(newPeer); # If the peer exists, an index is returned. Otherwise, -1 is returned and we need to add the peer.
+                newPeer = Peer(msg, addr[0], addr[1]); # Create a new peer based on the username, which is given by the text before a semicolon, and the address.
+                exists = self.existInList(newPeer); # If the peer exists, an index is returned. Otherwise, -1 is returned and we need to add the peer.
                 if exists < 0:
-                    peerList.append(newPeer);
-                    print(newPeer.username + " has come online.");
-                    timers.append(Timer(15.0, self.delete_peer, len(timers)));
-                    timers(-1).start();
+                    self.peerlist.append(newPeer);
+                    print("\n" + newPeer.username + " has come online.");
+                    self.timers.append(Timer(15.0, self.delete_peer, [newPeer]));
+                    self.timers[-1].start();
                 else:
                     try:
-                        timers[exists].cancel(); # If the peer already exists, cancel the current timer
-                        timers[exists] = Timer(15.0, self.delete_peer, exists); # and start a new one
-                        timers[exists].start();
+                        self.timers[exists].cancel(); # If the peer already exists, cancel the current timer
+                        self.timers[exists] = Timer(15.0, self.delete_peer, [newPeer]); # and start a new one
+                        self.timers[exists].start();
                     except:
                         print('Could not delete and add new Timer');
             except Empty:
                 #do nothing
                 dummy = 1 + 1;
             
-    def delete_peer(self,index):
+    def delete_peer(self,peer):
+        index = self.existInList(peer);
+        print(self.peerlist[index].username + " has gone offline.");
         try:
-            del timers[index];
-            print(peerList[index] + " has gone offline.");
-            del peerList[index];
+            del self.peerlist[index];
         except:
-            print('Cannot delete index of lists');
+            print('Cannot delete peer from list');
 
     def existInList(self, peer):
-        for i in range(0, len(peerlist)):
-            if peerlist[i].areEqual(peer):
+        for i in range(0, len(self.peerlist)):
+            if self.peerlist[i].areEqual(peer):
                 return i;
 
         return -1;
