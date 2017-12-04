@@ -26,11 +26,11 @@ class PeerDiscover(Thread):
                     self.timers[-1].start();
                 else:
                     try:
-                        self.timers[exists].cancel(); # If the peer already exists, cancel the current timer
-                        self.timers[exists] = Timer(15.0, self.delete_peer, [newPeer]); # and start a new one
-                        self.timers[exists].start();
-                    except:
-                        print('Could not delete and add new Timer');
+                        self.timers[exists-1].cancel(); # If the peer already exists, cancel the current timer
+                        self.timers[exists-1] = Timer(15.0, self.delete_peer, [newPeer]); # and start a new one
+                        self.timers[exists-1].start();
+                    except IndexError as ie:
+                        print(ie);
             except Empty:
                 continue;
             

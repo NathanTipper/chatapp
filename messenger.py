@@ -17,13 +17,13 @@ class Messenger(Thread):
                 msg, addr = self.crQueue.get(False);
                 try:
                     peer = self.findPeer(addr);
-                    print(peer.username + ": " + msg);
+                    print('\n' + peer.username + ": " + msg);
                 except Exception as error:
                     print(str(error));
                     
 
             except Empty:
-                dummy = 1+1;
+                continue;
             
             try:
                 msg = self.csQueue.get(False);
@@ -32,7 +32,7 @@ class Messenger(Thread):
                     port = self.peerList[i].port;
                     self.socket.sendto(msg.encode(), (addr, port));
             except Empty:
-                dummy = 1+1;
+                continue;
 
     def findPeer(self,addr):
         for i in range(0, len(self.peerList)):

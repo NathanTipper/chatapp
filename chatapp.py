@@ -71,6 +71,7 @@ def main():
                         print(" Users online: ");
                         for i in range(1, len(peerList)):
                                 print(peerList[i].username);
+                        continue;
 
                 csQueue.put(msg);
 	
