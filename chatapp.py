@@ -11,8 +11,8 @@ from messenger import Messenger;
 from broadcaster import Broadcaster;
 from queue import Queue, Empty;
 
-PORT_MIN = 50000;
-PORT_MAX = 50008;
+PORT_MIN = 55000;
+PORT_MAX = 55008;
 
 def main():
         if len(sys.argv) != 2:
