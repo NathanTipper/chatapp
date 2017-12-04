@@ -14,11 +14,13 @@ from queue import Queue, Empty;
 PORT_MIN = 55000;
 PORT_MAX = 55008;
 
+
 def main():
         if len(sys.argv) != 2:
                 print("Usage: {} [username]".format(sys.argv[0]));
-                sys.exit(1);
-
+                sys.exit(1);        
+                
+        
         try:
                 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM);
         except:
@@ -36,15 +38,22 @@ def main():
                                 print("Could not bind socket");
                                 exit(1);
 
+        # get user info
         addrinfo = socket.getaddrinfo(socket.gethostname(), port);
         addressFam = addrinfo[2];
         addr = addressFam[4];
 
+        # make local peer
+        localPeer = Peer(sys.argv[1], addr[0], addr[1]);
+        while(not localPeer.isValidUsername()):
+                newUsername = input("Please enter a username with at least one upper letter, one lower letter, one digit, and one of .-_: ");
+                localPeer = Peer(newUsername, addr[0], addr[1]);
+        
         hQueue = Queue();
         crQueue = Queue();
         csQueue = Queue();
         peerList = [];
-        peerList.append(Peer(sys.argv[1], addr[0], addr[1]));
+        peerList.append(localPeer);
         bc = Broadcaster(s, peerList, sys.argv[1]);
         mr = MasterReceiver(s, hQueue, crQueue);
         pd = PeerDiscover(peerList, hQueue);
@@ -64,7 +73,7 @@ def main():
 	
         msg = "";
         while True:
-                msg = input(sys.argv[1] + ": ");
+                msg = input(localPeer.username + ": ");
                 if len(msg) == 1 and msg[0] == 'q':
                         break;
                 elif(msg == "list"):
