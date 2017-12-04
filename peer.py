@@ -15,3 +15,6 @@ class Peer:
             return False;
             
         return True;
+    
+    def printInfo(self):
+        print(("\n{} : {} : {}").format(self.username, self.addr, self.port));

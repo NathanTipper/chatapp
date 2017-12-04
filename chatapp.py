@@ -67,11 +67,13 @@ def main():
                 msg = input(sys.argv[1] + ": ");
                 if len(msg) == 1 and msg[0] == 'q':
                         break;
-                if(msg == "list"):
+                elif(msg == "list"):
                         print(" Users online: ");
                         for i in range(1, len(peerList)):
                                 print(peerList[i].username);
                         continue;
+                elif len(msg) == 1 and msg[0] == 'p':
+                        peerList[0].printInfo();
 
                 csQueue.put(msg);
 	
