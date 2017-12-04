@@ -31,16 +31,20 @@ def main():
                         s.bind(('', port));
                         break;
                 except:
-                        print('Could not bind socket');
                         port += 1;
                         if(port > PORT_MAX):
+                                print("Could not bind socket");
                                 exit(1);
 
+        addrinfo = socket.getaddrinfo(socket.gethostname(), port);
+        addressFam = addrinfo[2];
+        addr = addressFam[4];
 
         hQueue = Queue();
         crQueue = Queue();
         csQueue = Queue();
         peerList = [];
+        peerList.append(Peer(sys.argv[1], addr[0], addr[1]));
         bc = Broadcaster(s, peerList, sys.argv[1]);
         mr = MasterReceiver(s, hQueue, crQueue);
         pd = PeerDiscover(peerList, hQueue);
@@ -65,7 +69,7 @@ def main():
                         break;
                 if(msg == "list"):
                         print(" Users online: ");
-                        for i in range(0, len(peerList)):
+                        for i in range(1, len(peerList)):
                                 print(peerList[i].username);
 
                 csQueue.put(msg);

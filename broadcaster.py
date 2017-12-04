@@ -3,7 +3,7 @@ from queue import Queue, Empty
 import socket
 
 IP_ADDRESS = "142.66.140."
-C_MIN = 13;
+C_MIN = 21;
 C_MAX = 69;
 D_MIN = 172;
 PORT_MIN = 50000;
@@ -44,7 +44,7 @@ class Broadcaster(Thread):
                                 extension = D_MIN;
 				
 	def broadcast(self):
-                for i in range(0, len(self.peerlist)):
+                for i in range(1, len(self.peerlist)):
                         addr = self.peerlist[i].addr;
                         port = self.peerlist[i].port;
                         self.socket.sendto(self.msg, (addr, port));

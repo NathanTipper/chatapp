@@ -17,7 +17,9 @@ class PeerDiscover(Thread):
                 msg, addr = self.hQueue.get(False);
                 newPeer = Peer(msg, addr[0], addr[1]); # Create a new peer based on the username, which is given by the text before a semicolon, and the address.
                 exists = self.existInList(newPeer); # If the peer exists, an index is returned. Otherwise, -1 is returned and we need to add the peer.
-                if exists < 0:
+                if exists == 0:
+                    continue;
+                elif exists < 0:
                     self.peerlist.append(newPeer);
                     print("\n" + newPeer.username + " has come online.");
                     self.timers.append(Timer(15.0, self.delete_peer, [newPeer]));
@@ -30,8 +32,7 @@ class PeerDiscover(Thread):
                     except:
                         print('Could not delete and add new Timer');
             except Empty:
-                #do nothing
-                dummy = 1 + 1;
+                continue;
             
     def delete_peer(self,peer):
         index = self.existInList(peer);
