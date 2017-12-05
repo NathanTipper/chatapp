@@ -27,7 +27,7 @@ class Messenger(Thread):
             
             try:
                 msg = self.csQueue.get(False);
-                for i in range(0, len(self.peerList)):
+                for i in range(1, len(self.peerList)):
                     addr = self.peerList[i].addr;
                     port = self.peerList[i].port;
                     self.socket.sendto(msg.encode(), (addr, port));
@@ -35,7 +35,7 @@ class Messenger(Thread):
                 continue;
 
     def findPeer(self,addr):
-        for i in range(0, len(self.peerList)):
+        for i in range(1, len(self.peerList)):
             if addr[0] != self.peerList[i].addr:
                 continue;
             elif addr[1] != self.peerList[i].port:

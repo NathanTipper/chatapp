@@ -54,7 +54,7 @@ def main():
         csQueue = Queue();
         peerList = [];
         peerList.append(localPeer);
-        bc = Broadcaster(s, peerList, sys.argv[1]);
+        bc = Broadcaster(s, peerList);
         mr = MasterReceiver(s, hQueue, crQueue);
         pd = PeerDiscover(peerList, hQueue);
         mgr = Messenger(s, peerList, crQueue, csQueue);
@@ -83,6 +83,7 @@ def main():
                         continue;
                 elif len(msg) == 1 and msg[0] == 'p':
                         peerList[0].printInfo();
+                        continue;
 
                 csQueue.put(msg);
 	

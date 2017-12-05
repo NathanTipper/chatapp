@@ -6,15 +6,15 @@ IP_ADDRESS = "142.66.140."
 C_MIN = 13;
 C_MAX = 69;
 D_MIN = 172;
-PORT_MIN = 50000;
-PORT_MAX = 50008;
+PORT_MIN = 55000;
+PORT_MAX = 55008;
 
 class Broadcaster(Thread):
-	def __init__(self, socket, peerlist, username):
+	def __init__(self, socket, peerlist):
                 Thread.__init__(self);
                 self.socket = socket;
                 self.peerlist = peerlist;
-                self.msg = ("HELLO" + username).encode();
+                self.msg = ("HELLO" + peerlist[0].username).encode();
                 self.initialRun = 0;
                 self.timer = Timer(5.0, self.broadcast);
 		
